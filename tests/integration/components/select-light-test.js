@@ -187,7 +187,7 @@ module('Integration | Component | select-light', function(hooks) {
 		this.set('myValue', null);
 
 		await render(hbs`
-      <SelectLight @change={{action (mut myValue) value="target.value"}}>
+      <SelectLight @change={{fn (mut this.myValue) value="target.value"}}>
         <option value="turtle">Turtle</option>
       </SelectLight>
     `);
@@ -196,14 +196,14 @@ module('Integration | Component | select-light', function(hooks) {
 		await triggerEvent('select', 'change');
 
 		assert.dom('select').hasValue('turtle');
-		assert.equal(this.myValue, 'turtle');
+		assert.equal(this.myValue.target.value, 'turtle');
 	});
 
 	test('should fire onChange when user chooses option, mut with yield', async function(assert) {
 		this.set('myValue', null);
 
 		await render(hbs`
-      <SelectLight @onChange={{action (mut myValue) value="target.value"}}>
+      <SelectLight @onChange={{fn (mut this.myValue) value="target.value"}}>
         <option value="turtle">Turtle</option>
       </SelectLight>
     `);
@@ -212,7 +212,7 @@ module('Integration | Component | select-light', function(hooks) {
 		await triggerEvent('select', 'change');
 
 		assert.dom('select').hasValue('turtle');
-		assert.equal(this.myValue, 'turtle');
+		assert.equal(this.myValue.target.value, 'turtle');
 	});
 
 	test('should fire onChange when user chooses option, mut with flat array', async function(assert) {
@@ -227,14 +227,14 @@ module('Integration | Component | select-light', function(hooks) {
       <SelectLight
         @options={{this.options}}
         @value={{this.value}}
-        @onChange={{action (mut this.myValue) value="target.value"}} />
+        @onChange={{fn (mut this.myValue) value="target.value"}} />
     `);
 
 		await fillIn('select', options[0]);
 		await triggerEvent('select', 'change');
 
 		assert.dom('select').hasValue(options[0]);
-		assert.equal(this.myValue, options[0]);
+		assert.equal(this.myValue.target.value, options[0]);
 	});
 
 	test('should fire onChange when user chooses option, custom action with flat array', async function(assert) {
@@ -252,7 +252,7 @@ module('Integration | Component | select-light', function(hooks) {
       <SelectLight
         @options={{this.options}}
         @value={{this.value}}
-        @onChange={{action this.customAction}} />
+        @onChange={{fn this.customAction}} />
     `);
 		await fillIn('select', options[0]);
 
