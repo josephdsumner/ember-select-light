@@ -49,7 +49,7 @@ module('Integration | Helper | is-equal', function(hooks) {
 			right: 'foo',
 		});
 
-		await render(hbs`{{is-equal left right}}`);
+		await render(hbs`{{is-equal this.left this.right}}`);
 
 		assert.equal(this.element.innerText.trim(), 'true');
 	});
@@ -60,7 +60,7 @@ module('Integration | Helper | is-equal', function(hooks) {
 			right: 'bar',
 		});
 
-		await render(hbs`{{is-equal left right}}`);
+		await render(hbs`{{is-equal this.left this.right}}`);
 
 		assert.equal(this.element.innerText.trim(), 'false');
 	});
@@ -71,7 +71,7 @@ module('Integration | Helper | is-equal', function(hooks) {
 			right: 'bar',
 		});
 
-		await render(hbs`{{is-equal left right}}`);
+		await render(hbs`{{is-equal this.left this.right}}`);
 
 		assert.equal(this.element.innerText.trim(), 'false');
 
@@ -89,7 +89,7 @@ module('Integration | Helper | is-equal', function(hooks) {
 			right: { deeper: 'foo', },
 		});
 
-		await render(hbs`{{is-equal left (get right 'deeper')}}`);
+		await render(hbs`{{is-equal this.left (get this.right 'deeper')}}`);
 
 		assert.equal(this.element.innerText.trim(), 'true');
 	});
@@ -100,7 +100,7 @@ module('Integration | Helper | is-equal', function(hooks) {
 			right: 'bar',
 		});
 
-		await render(hbs`<input disabled={{is-equal left right}} />`);
+		await render(hbs`<input disabled={{is-equal this.left this.right}} />`);
 
 		assert.equal(this.element.children[0].hasAttribute('disabled'), false);
 
