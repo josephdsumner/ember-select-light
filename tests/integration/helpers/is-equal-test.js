@@ -1,6 +1,6 @@
 
 import hbs from 'htmlbars-inline-precompile';
-import { render } from '@ember/test-helpers';
+import { render, settled } from '@ember/test-helpers';
 import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
 
@@ -100,11 +100,17 @@ module('Integration | Helper | is-equal', function(hooks) {
 			right: 'bar',
 		});
 
-		await render(hbs`<input disabled={{is-equal this.left this.right}} />`);
+		await render(hbs`
+      <input id='test-input' disabled={{if (is-equal this.left this.right) true false}} />
+      <label for='test-input'>Test Input</label>
+    `);
 
 		assert.equal(this.element.children[0].hasAttribute('disabled'), false);
+    await settled();
 
 		this.set('right', 'foo');
+    await settled();
+
 		assert.equal(this.element.children[0].hasAttribute('disabled'), true);
 	});
 });

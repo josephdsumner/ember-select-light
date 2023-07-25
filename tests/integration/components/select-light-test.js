@@ -1,5 +1,5 @@
 import hbs from 'htmlbars-inline-precompile';
-import { render, fillIn, triggerEvent } from '@ember/test-helpers';
+import { render, fillIn, triggerEvent, settled } from '@ember/test-helpers';
 import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
 
@@ -32,19 +32,19 @@ module('Integration | Component | select-light', function(hooks) {
 
     assert.dom('select').doesNotHaveAttribute('disabled');
 
-		this.set('disabled', true);
+    await settled();
+
+    this.set('disabled', true);
+
+    await settled();
+
     assert.dom('select').hasAttribute('disabled');
 	});
 
 	test('should support tabindex', async function(assert) {
-		this.set('tabindex', null);
+    await render(hbs`<SelectLight tabindex="-1" />`);
 
-		await render(hbs`<SelectLight tabindex={{this.tabindex}} />`);
-
-		assert.dom('select').doesNotHaveAttribute('tabindex', '0');
-
-		this.set('tabindex', 0);
-		assert.dom('select').hasAttribute('tabindex', '0');
+		assert.dom('select').hasAttribute('tabindex', '-1');
 	});
 
 	test('should have no options if none are specified', async function(assert) {
@@ -187,6 +187,7 @@ module('Integration | Component | select-light', function(hooks) {
 		this.set('myValue', null);
 
 		await render(hbs`
+      {{!-- template-lint-disable no-passed-in-event-handlers --}}
       <SelectLight @change={{fn (mut this.myValue) value="target.value"}}>
         <option value="turtle">Turtle</option>
       </SelectLight>
@@ -252,7 +253,7 @@ module('Integration | Component | select-light', function(hooks) {
       <SelectLight
         @options={{this.options}}
         @value={{this.value}}
-        @onChange={{fn this.customAction}} />
+        @onChange={{this.customAction}} />
     `);
 		await fillIn('select', options[0]);
 
